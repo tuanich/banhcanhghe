@@ -1,0 +1,38 @@
+version: "3.2"
+services:
+  php:
+    image: asia.gcr.io/banhcanhghe/website_php@sha256:5213726d348c3bf6cec524b5c691033db90028a052b2d416445a05991c0711bf
+   # volumes:
+    #  - ./public:/var/www/html/
+  apache:
+    image: asia.gcr.io/banhcanhghe/website_apache@sha256:b4e890f0dd5e09594dfda8c6561413a8da899f49d4f6ff796efad88f2781d14b
+    depends_on:
+      - php
+      - db
+    links:
+      - php
+      - db
+    ports:
+      - "80:80"
+      - "443:443"
+      
+    #volumes:
+    #  - ./public_html:/var/www/html/
+  db:
+    image: asia.gcr.io/banhcanhghe/website_db@sha256:df2feff72b9f996852a43fe245f8fe7a1f569eb92bd2ea2c37bd461d4fb645e5
+    ports:
+      - 127.0.0.1:3306:3306
+    command: [
+        '--default_authentication_plugin=mysql_native_password',
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+    ]
+   #volumes:
+    #  - ./db_data:/var/lib/mysql/
+    environment:
+      MYSQL_DATABASE: banhcanhtrang
+      MYSQL_ROOT_PASSWORD: Alibaba@123
+    container_name: db
+    
+volumes:
+    db_data:
